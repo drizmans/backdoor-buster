@@ -3,7 +3,6 @@
 ------------------------------------------------]]--
 if !bbloaded then bbloaded = true print(" > Backdoor Buster Loaded!") else return end -- reloading wont play nice with this
 -- Prep
-local bb = {}
 bb.bad = {}
 bb.original = {}
 bb.autoupdate = true -- Set this to false if you DON'T trust Crident
@@ -43,7 +42,6 @@ local function CheckURL(url)
 end
 
 -- HTTP Detours
-bb.original.httpFetch = http.Fetch
 function http.Fetch(url, ...)
 	bb.original.httpFetch = bb.original.httpFetch or http.Fetch -- Don't cache this until it's called?
 	if CheckURL(url) then return end
