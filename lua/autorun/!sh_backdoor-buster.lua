@@ -3,6 +3,7 @@
 ------------------------------------------------]]--
 if !bbloaded then bbloaded = true print(" > Backdoor Buster Loaded!") else return end -- reloading wont play nice with this
 -- Prep
+local bb = {}
 bb.bad = {}
 bb.original = {}
 bb.autoupdate = true -- Set this to false if you DON'T trust Crident
