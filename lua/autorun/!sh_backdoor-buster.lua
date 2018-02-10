@@ -44,15 +44,16 @@ local function CheckURL(url)
 end
 
 -- HTTP Detours
+bb.original.httpFetch = http.Fetch
+bb.original.httpPost = http.Post
+
 function http.Fetch(url, ...)
-	bb.original.httpFetch = bb.original.httpFetch or http.Fetch -- Don't cache this until it's called?
 	if CheckURL(url) then return end
 
 	return bb.original.httpFetch(url, ...)
 end
 
 function http.Post(url, ...)
-	bb.original.httpPost = bb.original.httpPost or http.Post
 	if CheckURL(url) then return end
 
 	return bb.original.httpPost(url, ...)
