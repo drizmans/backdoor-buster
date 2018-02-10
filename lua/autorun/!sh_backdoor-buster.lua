@@ -2,6 +2,7 @@
 	Basic backdoor blocker maintained by Crident
 ------------------------------------------------]]--
 if !bbloaded then bbloaded = true print(" > Backdoor Buster Loaded!") else return end -- reloading wont play nice with this
+
 -- Prep
 local bb = {}
 bb.bad = {}
@@ -25,7 +26,7 @@ local function CheckURL(url)
 	if string.StartWith(url, "https://") then -- Remove HTTP shit
 		url = string.TrimLeft(url, "https://")
 	elseif string.StartWith(url, "http://") then
-		url = string.TrimLeft(url, "https://")
+		url = string.TrimLeft(url, "http://")
 	end
 
 	-- Clean the URL cont.
