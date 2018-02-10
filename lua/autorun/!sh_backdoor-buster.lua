@@ -49,13 +49,10 @@ bb.original.httpPost = http.Post
 
 function http.Fetch(url, ...)
 	if CheckURL(url) then return end
-
 	return bb.original.httpFetch(url, ...)
 end
-
 function http.Post(url, ...)
 	if CheckURL(url) then return end
-
 	return bb.original.httpPost(url, ...)
 end
 -- HTTP Detours
