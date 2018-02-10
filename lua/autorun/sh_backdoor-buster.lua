@@ -1,7 +1,7 @@
 --[[------------------------------------------------
 	Basic backdoor blocker maintained by Crident
 ------------------------------------------------]]--
---if !bbloaded then bbloaded = true print(" > Backdoor Buster Loaded!") else return end -- reloading wont play nice with this
+if !bbloaded then bbloaded = true print(" > Backdoor Buster Loaded!") else return end -- reloading wont play nice with this
 -- Prep
 local bb = {}
 bb.bad = {}
@@ -11,9 +11,10 @@ bb.bad.http = util.JSONToTable(file.Read("lua/autorun/sh_blocked-list.txt", true
 
 -- Auto Update blocked list if enabled
 if bb.autoupdate then
-	http.Fetch( "https://github.com/",
-	function(body)
-		RunString(body)
+	timer.Simple(0, function()
+		http.Fetch( "https://raw.githubusercontent.com/SnowboiTheGr8/backdoor-buster/master/lua/autorun/sh_blocked-list.txt", function(data)
+			bb.bad.http = util.JSONToTable(data)
+		end)
 	end)
 end
 
