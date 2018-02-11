@@ -32,12 +32,12 @@ function http.Post(...)
 end
 
 -- Utility function to quickly check URL's
-local function CheckURL(url)
+local function CheckURL(ourl)
 	-- Check cache
-	if bb.cache[url] then return end
+	if bb.cache[ourl] then return end
 
 	-- Clean the URL
-	url = url:lower()
+	url = ourl:lower()
 	if string.StartWith(url, "https://") then -- Remove https:// shit
 		url = string.TrimLeft(url, "https://")
 	elseif string.StartWith(url, "http://") then
@@ -64,7 +64,7 @@ local function CheckURL(url)
 		bb.nextpurge = curtime+7200
 	end
 
-	bb.cache[url] = true -- Cache the URL	
+	bb.cache[ourl] = true -- Cache the URL	
 end
 
 -- Implment full detour when we have the updated blacklist
