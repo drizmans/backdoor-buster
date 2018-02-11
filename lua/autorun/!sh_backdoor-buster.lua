@@ -15,6 +15,12 @@ bb.bad.http = util.JSONToTable(file.Read("lua/autorun/sh_blocked-list.txt", true
 -- Set this to false if you DON'T trust Crident; false disables automatic blacklist updates.
 bb.autoupdate = true
 
+-- HTTP Detour
+bb.original.httpFetch = http.Fetch
+bb.original.httpPost = http.Post
+bb.temp.fetch = {}
+bb.temp.post = {}
+
 -- Utility function to easily check URL's - improvements welcome
 local function CheckURL(url)
 	-- Check cache
@@ -51,20 +57,14 @@ local function CheckURL(url)
 	bb.cache[url] = true -- Cache the URL	
 end
 
--- HTTP Detours
-bb.original.httpFetch = http.Fetch
-bb.original.httpPost = http.Post
-bb.temp.fetch = {}
-bb.temp.post = {}
-
-function http.Fetch(...) -- queue all requests
+function http.Fetch(...) -- Queue all requests until blacklist is known
 	table.insert(bb.temp.fetch, {...})
 end
 function http.Post(...)
 	table.insert(bb.temp.post, {...})
 end
 
-function bb.http()
+function bb.http() -- Called once the blacklist is updated
 	function http.Fetch(url, ...)
 		if CheckURL(url) then return end
 		return bb.original.httpFetch(url, ...)
@@ -74,10 +74,11 @@ function bb.http()
 		return bb.original.httpPost(url, ...)
 	end
 
-	for k, v in pairs(bb.temp.fetch) do http.Fetch(v[1], v[2], v[3], v[4]) end -- process queue
+	-- Process queue
+	for k, v in pairs(bb.temp.fetch) do http.Fetch(v[1], v[2], v[3], v[4]) end
 	for k, v in pairs(bb.temp.post) do http.Post(v[1], v[2], v[3], v[4], v[5]) end
+	bb.temp.fetch = nil bb.temp.post = nil -- cleanup
 end
--- HTTP Detour
 
 -- Auto Update blocked list if enabled
 if bb.autoupdate then
