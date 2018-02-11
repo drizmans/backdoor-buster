@@ -1,5 +1,6 @@
 --[[------------------------------------------------
-	Basic backdoor blocker maintained by Crident
+    Basic backdoor blocker maintained by Crident
+    Improvements welcome
 ------------------------------------------------]]--
 if !bbloaded then bbloaded = true print(" > Backdoor Buster Loaded!") else return end -- reloading wont play nice with this
 
@@ -14,14 +15,23 @@ bb.bad.http = util.JSONToTable(file.Read("lua/autorun/sh_blocked-list.txt", true
 
 -- Set this to false if you DON'T trust Crident; false disables automatic blacklist updates.
 bb.autoupdate = true
+-- Set this to false if you DON'T trust Crident; false disables automatic blacklist updates.
 
--- HTTP Detour
+-- HTTP detour setup
 bb.original.httpFetch = http.Fetch
 bb.original.httpPost = http.Post
 bb.temp.fetch = {}
 bb.temp.post = {}
 
--- Utility function to easily check URL's - improvements welcome
+-- Temp detour to queue all requests until blacklist is known
+function http.Fetch(...)
+	table.insert(bb.temp.fetch, {...})
+end
+function http.Post(...)
+	table.insert(bb.temp.post, {...})
+end
+
+-- Utility function to quickly check URL's
 local function CheckURL(url)
 	-- Check cache
 	if bb.cache[url] then return end
@@ -57,14 +67,8 @@ local function CheckURL(url)
 	bb.cache[url] = true -- Cache the URL	
 end
 
-function http.Fetch(...) -- Queue all requests until blacklist is known
-	table.insert(bb.temp.fetch, {...})
-end
-function http.Post(...)
-	table.insert(bb.temp.post, {...})
-end
-
-function bb.http() -- Called once the blacklist is updated
+-- Implment full detour when we have the updated blacklist
+function bb.http()
 	function http.Fetch(url, ...)
 		if CheckURL(url) then return end
 		return bb.original.httpFetch(url, ...)
