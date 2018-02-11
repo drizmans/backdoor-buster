@@ -90,7 +90,7 @@ if bb.autoupdate then
 		bb.original.httpFetch( "https://raw.githubusercontent.com/SnowboiTheGr8/backdoor-buster/master/lua/autorun/sh_blocked-list.txt", function(data)
 			bb.bad.http = util.JSONToTable(data)
 			bb.http()
-		end)
+		end, function() bb.http() end) -- Fail safe
 	end)
 else
 	bb.http()
