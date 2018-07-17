@@ -1,4 +1,7 @@
-# backdoor buster
-**WARNING** - This addon automatically updates the blocked URL's.
+# obsolete backdoor buster
 
-If you do NOT trust Crident to maintain this list, set `bb.autoupdate` to `false` in the `!sh_backdoor_buster.lua` file!
+Refer to this: https://gmod.facepunch.com/f/gmodaddon/btdjz/Backdoor-Scanner/
+
+It's more updated and user friendly.
+
+![](https://i.avasdemon.rocks/firefox_2018-07-03_16-39-44.png)
